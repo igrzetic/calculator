@@ -5,7 +5,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-  }
+}
   
   .calculator {
     background-color: #fff;
@@ -22,7 +22,6 @@ body {
     padding: 10px;
     font-size: 1.5rem;
     text-align: right;
-    
   }
   
   .buttons {
@@ -43,11 +42,15 @@ body {
     cursor: pointer;
   }
   
-  .number, .operator, .decimal {
+  .number, .decimal {
     background-color: #e0e0e0;
   }
   
-  .equals, .clear {
+  .equals, .clear, .operator {
     background-color: #ff9800;
     color: #fff;
-  }  
+  }
+
+.zero, .equals, .clear {
+    grid-column: span 2;
+}

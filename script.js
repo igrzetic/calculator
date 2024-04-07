@@ -5,29 +5,28 @@ let secondNumber = prompt("Enter second number:", 3);
 firstNumber = parseInt(firstNumber);
 secondNumber = parseInt(secondNumber);
 
-console.log("first number: " + firstNumber);
-console.log("operator: " + operator);
-console.log("second number: " + secondNumber);
+operate(operator, firstNumber, secondNumber);
 
-switch (operator) {
-    case "+":
-        add(firstNumber, secondNumber);
-        break;
-    case "-":
-        subtract(firstNumber, secondNumber);
-        break;
-    case "*":
-        multiply(firstNumber, secondNumber);
-        break;
-    case "/":
-        divide(firstNumber, secondNumber);
-        break;
-
-    default:
-        alert ("Unknown operation");
-        break;
+function operate(operator, firstNumber, secondNumber) {
+    switch (operator) {
+        case "+":
+            add(firstNumber, secondNumber);
+            break;
+        case "-":
+            subtract(firstNumber, secondNumber);
+            break;
+        case "*":
+            multiply(firstNumber, secondNumber);
+            break;
+        case "/":
+            divide(firstNumber, secondNumber);
+            break;
+    
+        default:
+            alert ("Unknown operation");
+            break;
     }
-
+}
 
 function add(firstNumber, secondNumber) {
     let result = firstNumber + secondNumber;
@@ -61,7 +60,28 @@ function divide(firstNumber, secondNumber) {
         let result = firstNumber / secondNumber;
 
         console.log(firstNumber + " / " + secondNumber + " = " + result);
-        
+
         return result;
     }
 }
+
+const display = document.querySelector(".display");
+const numberButtons = document.querySelectorAll(".button");
+let displayValue = "";
+
+numberButtons.forEach(number => {
+    number.addEventListener("click", () => {
+        display.value += number.textContent;
+        displayValue = display.value;
+        
+        console.log(displayValue);
+    });
+});
+
+
+const clear = document.querySelector(".clear");
+
+clear.addEventListener("click", () => {
+    display.value = "";
+    displayValue = "";
+});
