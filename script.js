@@ -1,30 +1,37 @@
-let firstNumber = prompt("Enter first number:", 5);
-let operator = prompt("Enter operator (+, -, *, /)");
-let secondNumber = prompt("Enter second number:", 3);
+const display = document.querySelector(".display");
+const numberBtn = document.querySelectorAll(".button");
+const operatorBtn = document.querySelectorAll(".operator");
+const clearBtn = document.querySelector(".clear");
+const equalsBtn = document.querySelector(".equals");
 
-firstNumber = parseInt(firstNumber);
-secondNumber = parseInt(secondNumber);
+let firstNumber = "";
+let operator = "";
+let secondNumber = "";
 
-operate(operator, firstNumber, secondNumber);
+firstNumber = parseFloat(firstNumber);
+secondNumber = parseFloat(secondNumber);
+
+equalsBtn.addEventListener('click', () => {
+    if (!firstNumber || !operator || !secondNumber) return;
+
+    const result = operate(operator, firstNumber, secondNumber);
+
+    display.value = result.toString();
+});
 
 function operate(operator, firstNumber, secondNumber) {
     switch (operator) {
         case "+":
-            add(firstNumber, secondNumber);
-            break;
+            return add(firstNumber, secondNumber);
         case "-":
-            subtract(firstNumber, secondNumber);
-            break;
+            return subtract(firstNumber, secondNumber);
         case "*":
-            multiply(firstNumber, secondNumber);
-            break;
+            return multiply(firstNumber, secondNumber);
         case "/":
-            divide(firstNumber, secondNumber);
-            break;
-    
+            return divide(firstNumber, secondNumber);
+
         default:
-            alert ("Unknown operation");
-            break;
+            return null;
     }
 }
 
@@ -65,23 +72,38 @@ function divide(firstNumber, secondNumber) {
     }
 }
 
-const display = document.querySelector(".display");
-const numberButtons = document.querySelectorAll(".button");
-let displayValue = "";
-
-numberButtons.forEach(number => {
+numberBtn.forEach(number => {
     number.addEventListener("click", () => {
-        display.value += number.textContent;
-        displayValue = display.value;
-        
-        console.log(displayValue);
+        if (!operator) {
+            firstNumber += number.textContent;
+            parseInt(firstNumber);
+            display.value = firstNumber; 
+        } else {
+            secondNumber = number.textContent;
+            display.value = secondNumber; 
+        }
     });
 });
 
+console.log("First number: " + firstNumber);
+console.log("Type of first number: " + typeof(firstNumber));
+console.log("Second number: " + secondNumber);
+console.log("Type of second number: " + typeof(secondNumber));
+// console.log("Number btn value: " + numberBtn.value);
 
-const clear = document.querySelector(".clear");
+operatorBtn.forEach(operatorBtn => {
+    operatorBtn.addEventListener('click', () => {
+        if (!firstNumber) return;
+        operator = operatorBtn.textContent;
+        display.value = operator;
 
-clear.addEventListener("click", () => {
+        console.log("operator btn: " + typeof(operator));
+    });
+});
+
+clearBtn.addEventListener("click", () => {
     display.value = "";
-    displayValue = "";
+    firstNumber = "";
+    operator = "";
+    secondNumber = "";
 });
