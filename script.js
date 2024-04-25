@@ -1,109 +1,160 @@
-const display = document.querySelector(".display");
-const numberBtn = document.querySelectorAll(".button");
-const operatorBtn = document.querySelectorAll(".operator");
-const clearBtn = document.querySelector(".clear");
-const equalsBtn = document.querySelector(".equals");
+let firstOperand = '';
+let secondOperand = '';
+let currentOperation = null;
+let shouldResetScreen = false;
 
-let firstNumber = "";
-let operator = "";
-let secondNumber = "";
+const currentOperationScreen = document.getElementById('currentOperationScreen');
+const lastOperationScreen = document.getElementById('lastOperationScreen');
+const deleteBtn = document.getElementById('delete-btn');
+const clearBtn = document.getElementById('clear-btn');
+const negBtn = document.getElementById('neg-btn');
+const percentageBtn = document.getElementById('percentage-btn');
 
-firstNumber = parseFloat(firstNumber);
-secondNumber = parseFloat(secondNumber);
+const operatorBtn = document.querySelectorAll('.operator');
+const numberBtn = document.querySelectorAll('.number');
 
-equalsBtn.addEventListener('click', () => {
-    if (!firstNumber || !operator || !secondNumber) return;
+const pointBtn = document.getElementById('point');
+const equalsBtn = document.getElementById('equals-btn');
 
-    const result = operate(operator, firstNumber, secondNumber);
+window.addEventListener('keydown', handleKeyboardInput);
+deleteBtn.addEventListener('click', deleteNumber);
+clearBtn.addEventListener('click', clear);
+negBtn.addEventListener('click', negateNumber);
+// percentageBtn.addEventListener('click', calculatePercentage);
+pointBtn.addEventListener('click', appendPoint);
+equalsBtn.addEventListener('click', evaluate);
 
-    display.value = result.toString();
-});
+numberBtn.forEach((button) =>
+    button.addEventListener('click', () => appendNumber(button.textContent))
+);
 
-function operate(operator, firstNumber, secondNumber) {
+operatorBtn.forEach((button) => 
+    button.addEventListener('click', () => setOperation(button.textContent))
+);
+
+function appendNumber(number) {
+    if (currentOperationScreen.textContent === '0' || shouldResetScreen)
+        resetScreen();
+    currentOperationScreen.textContent += number;
+}
+
+function resetScreen() {
+    currentOperationScreen.textContent = '';
+    shouldResetScreen = false;
+}
+
+function deleteNumber() {
+    currentText = currentOperationScreen.textContent;
+    if (currentText.length === 1 || currentText.charAt(0) === '-') {
+        currentOperationScreen.textContent = '0'
+    }
+    else
+        currentOperationScreen.textContent = currentOperationScreen.textContent.slice(0, -1);
+}
+
+function clear() {
+    currentOperationScreen.textContent = '0';
+    lastOperationScreen.textContent = '0';
+    firstOperand = '';
+    secondOperand = '';
+    currentOperation = null;
+}
+
+function negateNumber() {
+    if (currentOperationScreen.textContent === '0') return;
+    if (currentOperationScreen.textContent[0] === '-') {
+        currentOperationScreen.textContent = currentOperationScreen.textContent.slice(1);
+    }
+    else
+    currentOperationScreen.textContent = '-' + currentOperationScreen.textContent;
+}
+
+function appendPoint() {
+    if (shouldResetScreen) resetScreen()
+    if (currentOperationScreen.textContent === '')
+        currentOperationScreen.textContent = '0';
+    if (currentOperationScreen.textContent.includes('.')) return
+        currentOperationScreen.textContent += '.';
+}
+
+function setOperation(operator) {
+    if (currentOperation !== null) {
+        evaluate();    
+    }
+    firstOperand = currentOperationScreen.textContent;
+    currentOperation = operator;
+    lastOperationScreen.textContent = `${firstOperand} ${currentOperation}`;
+    shouldResetScreen = true;
+}
+
+function evaluate() {
+    if (currentOperation === null || shouldResetScreen) {
+        return;
+    }
+    if (currentOperation === '÷' && currentOperationScreen.textContent === '0') {
+        currentOperationScreen.textContent = 'Error';
+        return
+    }
+    secondOperand = currentOperationScreen.textContent;
+
+    currentOperationScreen.textContent = roundResult(
+        operate(currentOperation, firstOperand, secondOperand)
+    );
+    lastOperationScreen.textContent = `${firstOperand} ${currentOperation} ${secondOperand} =`;
+    currentOperation = null;
+}
+
+function roundResult(number) {
+    return Math.round(number * 1000) / 1000;
+}
+
+function handleKeyboardInput(e) {
+  if (e.key >= 0 && e.key <= 9) appendNumber(e.key)
+  if (e.key === '.') appendPoint()
+  if (e.key === '=' || e.key === 'Enter') evaluate()
+  if (e.key === 'Backspace') deleteNumber()
+  if (e.key === 'Escape') clear()
+  if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
+    setOperation(convertOperator(e.key))
+}
+
+function convertOperator(keyboardOperator) {
+  if (keyboardOperator === '/') return '÷'
+  if (keyboardOperator === '*') return '×'
+  if (keyboardOperator === '-') return '−'
+  if (keyboardOperator === '+') return '+'
+}
+
+function add(a, b) {
+    return a + b;
+}
+
+function subtract(a, b) {
+    return a - b;
+}
+
+function multiply(a, b) {
+    return a * b;
+}
+
+function divide(a, b) {
+    return a / b;
+}
+
+function operate (operator, a, b) {
+    a = Number(a);
+    b = Number(b);
     switch (operator) {
-        case "+":
-            return add(firstNumber, secondNumber);
-        case "-":
-            return subtract(firstNumber, secondNumber);
-        case "*":
-            return multiply(firstNumber, secondNumber);
-        case "/":
-            return divide(firstNumber, secondNumber);
-
+        case '+':
+            return add(a, b);
+        case '-':
+            return subtract(a, b);
+        case 'x':
+            return multiply(a, b);
+        case '÷':
+            if (b === 0) return null;
+            return divide(a, b);
         default:
             return null;
     }
 }
-
-function add(firstNumber, secondNumber) {
-    let result = firstNumber + secondNumber;
-
-    console.log(firstNumber + " + " + secondNumber + " = " + result);
-
-    return result;
-}
-
-function subtract(firstNumber, secondNumber) {
-    let result = firstNumber - secondNumber;
-
-    console.log(firstNumber + " - " + secondNumber + " = " + result);
-
-    return result;
-}
-
-function multiply(firstNumber, secondNumber) {
-    let result = firstNumber * secondNumber;
-
-    console.log(firstNumber + " * " + secondNumber + " = " + result);
-
-    return result;
-}
-
-function divide(firstNumber, secondNumber) {
-    if(firstNumber == 0 || secondNumber == 0) {
-        alert ("Cannot divide with 0.");
-        return null;
-    } else {
-        let result = firstNumber / secondNumber;
-
-        console.log(firstNumber + " / " + secondNumber + " = " + result);
-
-        return result;
-    }
-}
-
-numberBtn.forEach(number => {
-    number.addEventListener("click", () => {
-        if (!operator) {
-            firstNumber += number.textContent;
-            parseInt(firstNumber);
-            display.value = firstNumber; 
-        } else {
-            secondNumber = number.textContent;
-            display.value = secondNumber; 
-        }
-    });
-});
-
-console.log("First number: " + firstNumber);
-console.log("Type of first number: " + typeof(firstNumber));
-console.log("Second number: " + secondNumber);
-console.log("Type of second number: " + typeof(secondNumber));
-// console.log("Number btn value: " + numberBtn.value);
-
-operatorBtn.forEach(operatorBtn => {
-    operatorBtn.addEventListener('click', () => {
-        if (!firstNumber) return;
-        operator = operatorBtn.textContent;
-        display.value = operator;
-
-        console.log("operator btn: " + typeof(operator));
-    });
-});
-
-clearBtn.addEventListener("click", () => {
-    display.value = "";
-    firstNumber = "";
-    operator = "";
-    secondNumber = "";
-});

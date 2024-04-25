@@ -1,57 +1,269 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-  
-  .calculator {
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    width: 80%;
-    height: 50%;
-    max-width: 350px;
-  }
-  
-  .display {
-    width: calc(100% - 20px);
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 1.5rem;
-    text-align: right;
-  }
-  
-  .buttons {
-    /* display: flex;
-    flex-wrap: wrap; */
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px
-    ;
-  }
-  
-  button {
-    padding: 10px 20px;
-    margin: 5px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .number, .decimal {
-    background-color: #e0e0e0;
-  }
-  
-  .equals, .clear, .operator {
-    background-color: #ff9800;
-    color: #fff;
-  }
+:root {
+  /* body background */
+  --background: #f2cea6;
 
-.zero, .equals, .clear {
-    grid-column: span 2;
+  /* calculator body */
+  --calculator-background: #e3deda;
+
+  /* calculator screen */
+  --screen: #bfbfa2;
+  /* calculator screen border */
+  --screen-border: #1a1a1a;
+  /* prim color */
+  --screen-prim-color: #1a1a1a;
+  /* second color */
+  --screen-second-color: #8d8493;
+
+  /* calculator button background */
+  --calculator-numpad-background: #cfbfb6;
+
+  /* clear button color*/
+  --clear-btn: #db6428;
+  /* clear button color sec*/
+  --clear-btn-border: #b14f1e;
+
+  /* operation button color*/
+  --operation-btn: #eab071;
+  /* operation button color sec*/
+  --operation-btn-border: #e39744;
+  --operation-btn-font: #f5f0ec;
+
+  /* number button color*/
+  --number-btn: #f5f0ec;
+  /* number button color sec*/
+  --number-btn-border: #e4d8cb;
+  --number-btn-font: #b14f1e;
+
+  /* = button color*/
+  --equals-btn: #a49daa;
+  /* = button color sec*/
+  --equals-btn-border: #8a8192;
+
+  /* delete button color*/
+  --delete-btn: #4c4c4c;
+  /* delete button color sec*/
+  --delete-btn-border: #1a1a1a;
+
+  /* stripe color*/
+  --stripe1: #e54d40;
+  /* stripe color sec*/
+  --stripe2: #e7c22d;
+  /* stripe color sec*/
+  --stripe3: #035dac;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* footer support */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--background);
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  /* footer support */
+  margin-bottom: 100px;
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+button:hover {
+  box-shadow: none;
+}
+
+/* MAIN */
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 75vh;
+  min-height: 500px;
+  padding: 10px;
+  margin-top: 50px;
+}
+
+.calculator {
+  width: 300px;
+  border-radius: 30px;
+  padding: 13px;
+  padding-top: 0;
+  padding-bottom: 40px;
+  background-color: var(--calculator-background);
+  box-shadow: 10px 10px 80px #edb488;
+}
+
+.stripes {
+  display: flex;
+  gap: 3px;
+  height: 55px;
+  margin: 0;
+  padding: 0;
+}
+
+.stripe-red {
+  width: 10px;
+  margin-left: 15px;
+  background-color: var(--stripe1);
+}
+
+.stripe-yellow {
+  width: 10px;
+  background-color: var(--stripe2);
+}
+
+.stripe-blue {
+  width: 10px;
+  background-color: var(--stripe3);
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  border: 5px var(--screen-border) solid;
+  border-radius: 10px;
+  background-color: var(--screen);
+  box-shadow: 0 5px 5px inset rgba(0, 0, 0, 0.3);
+}
+
+.screen-last,
+.screen-current {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  overflow: hidden;
+}
+
+.screen-current {
+  color: var(--screen-prim-color);
+  font-size: 45px;
+  font-weight: 700;
+  padding: 10px 15px 0 15px;
+}
+
+.screen-last {
+  color: var(--screen-second-color);
+  font-size: 18px;
+  padding: 0 15px;
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+
+  background-color: var(--calculator-numpad-background);
+  padding: 7px;
+  border-radius: 5px;
+  border: none;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.btn {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4);
+  border: none;
+}
+
+.delete-btn-flex {
+  display: flex;
+  justify-content: end;
+  margin: 10px 6px 30px 0;
+}
+
+.delete {
+  padding: 5px 10px;
+  background-color: var(--delete-btn);
+  color: var(--operation-btn-font);
+  border-top: 3px var(--delete-btn-border) solid;
+  border-bottom: 6px var(--delete-btn-border) solid;
+  border-left: 6px var(--delete-btn-border) solid;
+  border-right: 6px var(--delete-btn-border) solid;
+  height: 35px;
+  font-size: 16px;
+}
+
+.clear {
+  color: var(--operation-btn-font);
+  background-color: var(--clear-btn);
+
+  border-top: 6px var(--clear-btn-border) solid;
+  border-bottom: 8px var(--clear-btn-border) solid;
+  border-left: 8px var(--clear-btn-border) solid;
+  border-right: 8px var(--clear-btn-border) solid;
+}
+
+.operator {
+  color: var(--operation-btn-font);
+  background-color: var(--operation-btn);
+
+  border-top: 6px var(--operation-btn-border) solid;
+  border-bottom: 8px var(--operation-btn-border) solid;
+  border-left: 8px var(--operation-btn-border) solid;
+  border-right: 8px var(--operation-btn-border) solid;
+}
+
+.equals {
+  color: var(--operation-btn-font);
+  background-color: var(--equals-btn);
+
+  border-top: 6px var(--equals-btn-border) solid;
+  border-bottom: 8px var(--equals-btn-border) solid;
+  border-left: 8px var(--equals-btn-border) solid;
+  border-right: 8px var(--equals-btn-border) solid;
+}
+
+.number,
+.point {
+  color: var(--number-btn-font);
+  background-color: var(--number-btn);
+
+  border-top: 6px var(--number-btn-border) solid;
+  border-bottom: 8px var(--number-btn-border) solid;
+  border-left: 8px var(--number-btn-border) solid;
+  border-right: 8px var(--number-btn-border) solid;
+}
+
+/* FOOTER */
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.fa-github {
+  color: var(--screen-border);
+  font-size: 24px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.fa-github:hover {
+  transform: rotate(360deg) scale(1.2);
 }
